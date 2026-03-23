@@ -1,28 +1,74 @@
-Momentum is a refined, dark-mode-first productivity dashboard designed to help you stay focused, track your goals, and measure your performance over time.
+Momentum Dashboard
 
-What the Dashboard Does
+A personal productivity dashboard built with HTML, CSS, and vanilla JavaScript.
 
-Home View: Provides a quick overview of your day, including a time-based greeting, today's date, and summary statistics for goals, tasks, and Pomodoro sessions.
-Goal Tracking: Allows you to set long-term goals with deadlines and categories. It visualizes progress using circular rings and a monthly calendar.
-Task Management: Simple task list grouped by urgency (Today, Tomorrow, This Week, Later). Integrates with goals and features a performance rating system.
-Pomodoro Timer: A customizable focus timer with session tracking and break intervals to boost productivity.
-Performance Stats: Deep-dive into your productivity with statistics and automated line charts that track your performance ratings for specific tasks over time.
+---
 
-Interactive Features Implemented
+Dashboard Purpose
 
-1. Dark/Light Mode Toggle: Smooth theme switching using CSS custom properties, persisted for future sessions.
-2. Goal Visualization: Dynamic circular progress rings that change color based on proximity to the deadline.
-3. Interactive Calendar: A monthly grid that highlights days with active goals or tasks; clicking a day shows specific items in a side panel.
-4. Self-Rating System: When completing a task, you're prompted to rate your performance (1–10). This data is then used to generate performance charts.
-5. Smart Pomodoro Timer: Animates an SVG ring as time passes, updates the browser tab with the countdown, and provides a mini-timer in the header when you navigate to other sections.
-6. Canvas Performance Charts: Automatically generates line charts using the pure Canvas API for any task title with 5 or more rating data points.
-7. Data Persistence: All your goals, tasks, settings, and logs are saved to localStorage, ensuring your data is there when you return.
-8. Toast Notifications: Real-time feedback for actions like adding tasks, completing goals, or timer sessions.
-9. Form Validation: Strict enforcement of required fields and future-dated deadlines/tasks with inline error messaging.
+Momentum helps you track goals, tasks, Pomodoro sessions, and performance stats — all in one place. The Data Explorer section (new in this version) provides a filterable, searchable view of your productivity activity log.
 
-Technology Stack
+---
 
-HTML5: Semantic structure.
-CSS3: Vanilla CSS with Grid, Flexbox, and Custom Properties.
-JavaScript: Pure Vanilla JS for all state management and logic.
-Google Fonts: DM Serif Display, DM Sans, and DM Mono.
+Data Structure
+
+Mock data lives in `data.js` as a global array: `MOCK_DATA`.
+
+Each record has:
+
+| Field      | Type     | Description                               |
+| ---------- | -------- | ----------------------------------------- |
+| `id`       | number   | Unique identifier                         |
+| `name`     | string   | Activity title                            |
+| `category` | string   | Work, Health, Learning, Finance, Personal |
+| `status`   | string   | Done, In Progress, Pending                |
+| `date`     | string   | ISO date YYYY-MM-DD                       |
+| `value`    | number   | Completion score 0–100                    |
+| `tags`     | string[] | Keyword tags for search                   |
+
+User-created goals, tasks, and Pomodoro logs are stored in localStorage under momentum_* keys.
+
+---
+
+Filters Implemented
+
+All filters in the Data Explorer section update the UI instantly (no page reload):
+
+| Control                  | Behaviour                                               |
+| ------------------------ | ------------------------------------------------------- |
+| Search input             | Fuzzy match on activity name and tags                   |
+| Category dropdown        | Filter by Work / Health / Learning / Finance / Personal |
+| Status dropdown          | Filter by Done / In Progress / Pending                  |
+| Sort toggle (A–Z / Z–A)  | Alphabetically sort the filtered results                |
+| Card / Table view toggle | Switch between a responsive card grid and a data table  |
+| Filter pills             | Active filters shown as removable pill chips            |
+
+---
+
+Responsive Design Choices
+
+| Breakpoint | Behaviour |
+| ---------- | --------- |
+
+> 768 px (Desktop) | Full horizontal nav, multi-column card grids
+> ≤ 768 px (Tablet/Mobile) | Hamburger menu replaces horizontal nav; nav items stack vertically with a smooth max-height slide animation
+> ≤ 480 px (Small mobile) | Single-column layouts for stat cards and data cards
+
+CSS techniques used:
+
+* CSS Grid (auto-fill columns with minmax) for fluid card grids
+* Flexbox for nav, toolbars, and badges
+* CSS custom properties (variables) for consistent theming
+* Smooth transitions on all interactive elements
+* max-height animation for the mobile nav collapse
+
+---
+
+Files
+
+| File         | Role                                                   |
+| ------------ | ------------------------------------------------------ |
+| `index.html` | Structure & markup                                     |
+| `style.css`  | All styles (design system, components, responsive)     |
+| `data.js`    | 30-record mock dataset                                 |
+| `script.js`  | All interactivity, state management, and DOM rendering |
