@@ -167,19 +167,90 @@ main{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:32px 24px}
 /* WARNING BANNER */
 .warning-banner{background:rgba(245,158,11,.12);color:var(--accent);padding:10px 24px;text-align:center;font-size:.85rem;border-bottom:1px solid rgba(245,158,11,.2)}
 
-/* RESPONSIVE */
+
+
+/* =========================================================
+   HAMBURGER
+   ========================================================= */
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;transition:background var(--transition)}
+.hamburger:hover{background:var(--bg-card)}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text-primary);border-radius:2px;transition:transform .3s ease,opacity .3s ease}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+/* =========================================================
+   DATA EXPLORER — TOOLBAR
+   ========================================================= */
+.data-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.data-search-wrap{position:relative;flex:1;min-width:200px}
+.data-search-wrap .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none}
+.data-search-wrap input{width:100%;padding:9px 14px 9px 36px;border-radius:8px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-family:'DM Sans',sans-serif;font-size:.9rem;transition:border var(--transition)}
+.data-search-wrap input:focus{outline:none;border-color:var(--accent)}
+.data-toolbar select{padding:9px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer;transition:border var(--transition)}
+.data-toolbar select:focus{outline:none;border-color:var(--accent)}
+
+/* View toggle */
+.view-toggle{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.view-btn{background:var(--bg-secondary);border:none;color:var(--text-secondary);padding:8px 14px;cursor:pointer;font-size:1rem;transition:all var(--transition)}
+.view-btn.active{background:var(--accent);color:#000}
+.view-btn:hover:not(.active){background:var(--bg-card);color:var(--text-primary)}
+
+/* Filter pills */
+.filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;min-height:0}
+.filter-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;background:rgba(245,158,11,.15);color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;border:1px solid rgba(245,158,11,.3);transition:all var(--transition)}
+.filter-pill:hover{background:rgba(245,158,11,.25)}
+
+/* Result count */
+.data-count{font-size:.8rem;color:var(--text-secondary);margin-bottom:16px}
+
+/* =========================================================
+   DATA EXPLORER — CARDS
+   ========================================================= */
+.data-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.data-card{padding:20px;cursor:default;transition:all var(--transition)}
+.data-card:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
+.data-card-header{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.data-card-title{font-size:1rem;font-weight:500;font-family:'DM Sans',sans-serif;margin-bottom:8px;line-height:1.4}
+.data-card-meta{font-size:.78rem;color:var(--text-secondary);margin-bottom:10px}
+.data-card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+
+/* Data badge (inline coloured label) */
+.data-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+
+/* Score bar */
+.score-bar-wrap{display:flex;align-items:center;gap:8px;margin-top:4px}
+.score-bar{height:6px;border-radius:3px;flex:1;transition:width .4s ease}
+.score-label{font-size:.78rem;font-weight:600;color:var(--text-secondary);min-width:24px;text-align:right;font-family:'DM Mono',monospace}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 8px;border-radius:12px;background:var(--bg-secondary);color:var(--text-secondary);font-size:.72rem;border:1px solid var(--border)}
+
+/* Data table extras */
+.data-table .score-bar-wrap{min-width:90px}
+.data-tags-cell{display:flex;flex-wrap:wrap;gap:4px}
+
+/* =========================================================
+   RESPONSIVE — Mobile nav collapse
+   ========================================================= */
 @media(max-width:768px){
-  header{flex-wrap:wrap;height:auto;padding:12px 16px;gap:8px}
-  nav{order:3;width:100%;overflow-x:auto;gap:0}
-  nav a{padding:8px 12px;font-size:.82rem;white-space:nowrap}
+  header{flex-wrap:wrap;height:auto;padding:12px 16px;gap:8px;position:relative}
+  nav{order:3;width:100%;overflow:hidden;max-height:0;flex-direction:column;gap:0;transition:max-height .35s ease}
+  nav.nav-open{max-height:400px}
+  nav a{padding:10px 16px;border-radius:8px;font-size:.9rem;white-space:nowrap;width:100%}
+  .hamburger{display:flex}
   main{padding:20px 16px}
   .form-row{grid-template-columns:1fr}
   .cards-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
   .timer-ring-wrap{width:200px;height:200px}
   .timer-display{font-size:2.5rem}
   .rating-grid{grid-template-columns:repeat(5,1fr)}
+  .data-toolbar{flex-direction:column;align-items:stretch}
+  .data-search-wrap{min-width:unset}
+  .data-cards-grid{grid-template-columns:1fr}
 }
 @media(max-width:480px){
   .goal-header{flex-direction:column}
   .cards-grid{grid-template-columns:1fr 1fr}
+  .data-cards-grid{grid-template-columns:1fr}
 }
