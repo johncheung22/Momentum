@@ -1,161 +1,270 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Momentum — Productivity Dashboard</title>
-<meta name="description" content="Momentum: A personal productivity dashboard to track goals, tasks, pomodoro sessions, and performance stats.">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Momentum — Productivity Dashboard</title>
+  <meta name="description"
+    content="Momentum: A personal productivity dashboard to track goals, tasks, pomodoro sessions, and performance stats.">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="toast-container" id="toast-container"></div>
+  <div class="toast-container" id="toast-container"></div>
 
-<header>
-  <div class="logo">🔥 <span>Momentum</span></div>
-  <nav id="main-nav">
-    <a href="#" data-section="home" class="active">Home</a>
-    <a href="#" data-section="goals">Goals</a>
-    <a href="#" data-section="tasks">Tasks</a>
-    <a href="#" data-section="pomodoro">Pomodoro</a>
-    <a href="#" data-section="stats">Stats</a>
-  </nav>
-  <div class="header-right">
-    <div id="mini-timer" class="mono"></div>
-    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🌙</button>
-  </div>
-</header>
+  <header>
+    <div class="logo">🔥 <span>Momentum</span></div>
+    <nav id="main-nav">
+      <a href="#" data-section="home" class="active">Home</a>
+      <a href="#" data-section="goals">Goals</a>
+      <a href="#" data-section="tasks">Tasks</a>
+      <a href="#" data-section="pomodoro">Pomodoro</a>
+      <a href="#" data-section="stats">Stats</a>
+      <a href="#" data-section="data">Data</a>
+    </nav>
+    <div class="header-right">
+      <div id="mini-timer" class="mono"></div>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
 
-<!-- HOME -->
-<main>
-<div class="section active" id="section-home">
-  <h1 id="greeting" style="font-size:2rem;margin-bottom:4px"></h1>
-  <p id="today-date" style="color:var(--text-secondary);margin-bottom:24px"></p>
-  <div class="cards-grid" id="home-stats"></div>
-  <div style="margin-top:24px">
-    <button class="btn btn-primary" id="quick-add-btn">＋ Quick Add Task</button>
-    <div id="quick-add-form" style="display:none;margin-top:16px" class="card">
-      <div class="form-row">
-        <div class="form-group"><label>Task Title</label><input type="text" id="qa-title" placeholder="What needs doing?"><div class="error-msg" id="qa-title-err">Title is required</div></div>
-        <div class="form-group"><label>Date</label><input type="date" id="qa-date"><div class="error-msg" id="qa-date-err">Date must be today or future</div></div>
-      </div>
-      <div class="form-row">
-        <div class="form-group"><label>Priority</label><select id="qa-priority"><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option></select></div>
-        <div class="form-group"><label>Linked Goal</label><select id="qa-goal"><option value="">None</option></select></div>
-      </div>
-      <button class="btn btn-primary btn-sm" id="qa-submit">Add Task</button>
-      <button class="btn btn-secondary btn-sm" id="qa-cancel" style="margin-left:8px">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- GOALS -->
-<div class="section" id="section-goals">
-  <h2 style="margin-bottom:24px">🎯 Goals</h2>
-  <div class="card" style="margin-bottom:24px">
-    <h3 style="margin-bottom:16px">Create a New Goal</h3>
-    <div class="form-group"><label>Goal Title *</label><input type="text" id="goal-title" placeholder="e.g. Run a marathon"><div class="error-msg" id="goal-title-err">Title is required</div></div>
-    <div class="form-group"><label>Description</label><textarea id="goal-desc" placeholder="Describe your goal..."></textarea></div>
-    <div class="form-row">
-      <div class="form-group"><label>Deadline *</label><input type="date" id="goal-deadline"><div class="error-msg" id="goal-deadline-err">Deadline must be in the future</div></div>
-      <div class="form-group"><label>Category</label><select id="goal-category"><option>Health</option><option>Career</option><option>Learning</option><option>Personal</option><option>Financial</option></select></div>
-    </div>
-    <button class="btn btn-primary" id="goal-submit">Add Goal</button>
-  </div>
-  <div id="goals-list"></div>
-  <div class="calendar-container card" style="margin-top:32px">
-    <div class="calendar-header">
-      <div class="calendar-nav"><button id="cal-prev">‹</button></div>
-      <h3 id="cal-month-label"></h3>
-      <div class="calendar-nav"><button id="cal-next">›</button></div>
-    </div>
-    <div class="calendar-grid" id="calendar-grid"></div>
-    <div class="day-panel" id="day-panel"><h4 id="day-panel-title"></h4><div id="day-panel-items"></div></div>
-  </div>
-</div>
-
-<!-- TASKS -->
-<div class="section" id="section-tasks">
-  <h2 style="margin-bottom:24px">✅ Tasks</h2>
-  <div class="card" style="margin-bottom:24px">
-    <h3 style="margin-bottom:16px">Add a Task</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Task Title *</label><input type="text" id="task-title" placeholder="e.g. Review chapter 5"><div class="error-msg" id="task-title-err">Title is required</div></div>
-      <div class="form-group"><label>Date *</label><input type="date" id="task-date"><div class="error-msg" id="task-date-err">Date must be today or future</div></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Priority</label><select id="task-priority"><option value="Low">Low</option><option value="Medium" selected>Medium</option><option value="High">High</option></select></div>
-      <div class="form-group"><label>Linked Goal</label><select id="task-goal"><option value="">None</option></select></div>
-    </div>
-    <button class="btn btn-primary" id="task-submit">Add Task</button>
-  </div>
-  <div id="tasks-list"></div>
-</div>
-
-<!-- POMODORO -->
-<div class="section" id="section-pomodoro">
-  <h2 style="margin-bottom:24px">🍅 Pomodoro Timer</h2>
-  <div id="pomo-config" class="pomodoro-config card">
-    <h3 style="margin-bottom:16px">Configure Session</h3>
-    <div class="form-row">
-      <div class="form-group"><label>Focus (min)</label><input type="number" id="pomo-focus" value="25" min="1" max="120"></div>
-      <div class="form-group"><label>Break (min)</label><input type="number" id="pomo-break" value="5" min="1" max="60"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Long Break (min)</label><input type="number" id="pomo-long-break" value="15" min="1" max="60"></div>
-      <div class="form-group"><label>Long Break Every N</label><input type="number" id="pomo-interval" value="4" min="2" max="10"></div>
-    </div>
-    <button class="btn btn-primary" id="pomo-start">Start Session</button>
-  </div>
-  <div id="pomo-timer" style="display:none">
-    <div class="timer-container" id="timer-container">
-      <p class="timer-label" id="timer-label">Focus Session #1</p>
-      <div class="timer-ring-wrap">
-        <svg width="100%" height="100%" viewBox="0 0 260 260">
-          <circle class="timer-ring-bg" cx="130" cy="130" r="120"/>
-          <circle class="timer-ring-progress" id="timer-ring" cx="130" cy="130" r="120" stroke-dasharray="753.98" stroke-dashoffset="0"/>
-        </svg>
-        <div class="timer-display mono" id="timer-display">25:00</div>
-      </div>
-      <div class="timer-buttons">
-        <button class="btn btn-secondary" id="timer-pause">⏸ Pause</button>
-        <button class="btn btn-danger btn-sm" id="timer-reset">Reset</button>
-        <button class="btn btn-secondary btn-sm" id="timer-skip">Skip ▶</button>
+  <!-- HOME -->
+  <main>
+    <div class="section active" id="section-home">
+      <h1 id="greeting" style="font-size:2rem;margin-bottom:4px"></h1>
+      <p id="today-date" style="color:var(--text-secondary);margin-bottom:24px"></p>
+      <div class="cards-grid" id="home-stats"></div>
+      <div style="margin-top:24px">
+        <button class="btn btn-primary" id="quick-add-btn">＋ Quick Add Task</button>
+        <div id="quick-add-form" style="display:none;margin-top:16px" class="card">
+          <div class="form-row">
+            <div class="form-group"><label>Task Title</label><input type="text" id="qa-title"
+                placeholder="What needs doing?">
+              <div class="error-msg" id="qa-title-err">Title is required</div>
+            </div>
+            <div class="form-group"><label>Date</label><input type="date" id="qa-date">
+              <div class="error-msg" id="qa-date-err">Date must be today or future</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Priority</label><select id="qa-priority">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select></div>
+            <div class="form-group"><label>Linked Goal</label><select id="qa-goal">
+                <option value="">None</option>
+              </select></div>
+          </div>
+          <button class="btn btn-primary btn-sm" id="qa-submit">Add Task</button>
+          <button class="btn btn-secondary btn-sm" id="qa-cancel" style="margin-left:8px">Cancel</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="session-log" id="session-log" style="margin-top:32px">
-    <h3>Today's Sessions</h3>
-    <div id="session-log-list" style="margin-top:12px"></div>
-    <p id="total-focus" style="margin-top:12px;font-size:.9rem;color:var(--text-secondary)"></p>
-  </div>
-</div>
 
-<!-- STATS -->
-<div class="section" id="section-stats">
-  <h2 style="margin-bottom:24px">📊 Stats</h2>
-  <div class="cards-grid" id="stats-cards"></div>
-  <div id="stats-charts" style="margin-top:32px"></div>
-  <div style="margin-top:32px">
-    <h3 style="margin-bottom:12px">Task Rating History</h3>
-    <div style="overflow-x:auto"><table class="stats-table" id="rating-table"><thead><tr><th>Task</th><th>Rating</th><th>Date</th></tr></thead><tbody id="rating-tbody"></tbody></table></div>
+    <!-- GOALS -->
+    <div class="section" id="section-goals">
+      <h2 style="margin-bottom:24px">🎯 Goals</h2>
+      <div class="card" style="margin-bottom:24px">
+        <h3 style="margin-bottom:16px">Create a New Goal</h3>
+        <div class="form-group"><label>Goal Title *</label><input type="text" id="goal-title"
+            placeholder="e.g. Run a marathon">
+          <div class="error-msg" id="goal-title-err">Title is required</div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea id="goal-desc"
+            placeholder="Describe your goal..."></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>Deadline *</label><input type="date" id="goal-deadline">
+            <div class="error-msg" id="goal-deadline-err">Deadline must be in the future</div>
+          </div>
+          <div class="form-group"><label>Category</label><select id="goal-category">
+              <option>Health</option>
+              <option>Career</option>
+              <option>Learning</option>
+              <option>Personal</option>
+              <option>Financial</option>
+            </select></div>
+        </div>
+        <button class="btn btn-primary" id="goal-submit">Add Goal</button>
+      </div>
+      <div id="goals-list"></div>
+      <div class="calendar-container card" style="margin-top:32px">
+        <div class="calendar-header">
+          <div class="calendar-nav"><button id="cal-prev">‹</button></div>
+          <h3 id="cal-month-label"></h3>
+          <div class="calendar-nav"><button id="cal-next">›</button></div>
+        </div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+        <div class="day-panel" id="day-panel">
+          <h4 id="day-panel-title"></h4>
+          <div id="day-panel-items"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="section" id="section-tasks">
+      <h2 style="margin-bottom:24px">✅ Tasks</h2>
+      <div class="card" style="margin-bottom:24px">
+        <h3 style="margin-bottom:16px">Add a Task</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Task Title *</label><input type="text" id="task-title"
+              placeholder="e.g. Review chapter 5">
+            <div class="error-msg" id="task-title-err">Title is required</div>
+          </div>
+          <div class="form-group"><label>Date *</label><input type="date" id="task-date">
+            <div class="error-msg" id="task-date-err">Date must be today or future</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Priority</label><select id="task-priority">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+            </select></div>
+          <div class="form-group"><label>Linked Goal</label><select id="task-goal">
+              <option value="">None</option>
+            </select></div>
+        </div>
+        <button class="btn btn-primary" id="task-submit">Add Task</button>
+      </div>
+      <div id="tasks-list"></div>
+    </div>
+
+    <!-- POMODORO -->
+    <div class="section" id="section-pomodoro">
+      <h2 style="margin-bottom:24px">🍅 Pomodoro Timer</h2>
+      <div id="pomo-config" class="pomodoro-config card">
+        <h3 style="margin-bottom:16px">Configure Session</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Focus (min)</label><input type="number" id="pomo-focus" value="25" min="1"
+              max="120"></div>
+          <div class="form-group"><label>Break (min)</label><input type="number" id="pomo-break" value="5" min="1"
+              max="60"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Long Break (min)</label><input type="number" id="pomo-long-break" value="15"
+              min="1" max="60"></div>
+          <div class="form-group"><label>Long Break Every N</label><input type="number" id="pomo-interval" value="4"
+              min="2" max="10"></div>
+        </div>
+        <button class="btn btn-primary" id="pomo-start">Start Session</button>
+      </div>
+      <div id="pomo-timer" style="display:none">
+        <div class="timer-container" id="timer-container">
+          <p class="timer-label" id="timer-label">Focus Session #1</p>
+          <div class="timer-ring-wrap">
+            <svg width="100%" height="100%" viewBox="0 0 260 260">
+              <circle class="timer-ring-bg" cx="130" cy="130" r="120" />
+              <circle class="timer-ring-progress" id="timer-ring" cx="130" cy="130" r="120" stroke-dasharray="753.98"
+                stroke-dashoffset="0" />
+            </svg>
+            <div class="timer-display mono" id="timer-display">25:00</div>
+          </div>
+          <div class="timer-buttons">
+            <button class="btn btn-secondary" id="timer-pause">⏸ Pause</button>
+            <button class="btn btn-danger btn-sm" id="timer-reset">Reset</button>
+            <button class="btn btn-secondary btn-sm" id="timer-skip">Skip ▶</button>
+          </div>
+        </div>
+      </div>
+      <div class="session-log" id="session-log" style="margin-top:32px">
+        <h3>Today's Sessions</h3>
+        <div id="session-log-list" style="margin-top:12px"></div>
+        <p id="total-focus" style="margin-top:12px;font-size:.9rem;color:var(--text-secondary)"></p>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="section" id="section-stats">
+      <h2 style="margin-bottom:24px">📊 Stats</h2>
+      <div class="cards-grid" id="stats-cards"></div>
+      <div id="stats-charts" style="margin-top:32px"></div>
+      <div style="margin-top:32px">
+        <h3 style="margin-bottom:12px">Task Rating History</h3>
+        <div style="overflow-x:auto">
+          <table class="stats-table" id="rating-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Rating</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="rating-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA EXPLORER -->
+    <div class="section" id="section-data">
+      <h2 style="margin-bottom:8px">🗂 Data Explorer</h2>
+      <p style="color:var(--text-secondary);margin-bottom:24px;font-size:.9rem">Browse, filter, and sort the
+        productivity activity log.</p>
+
+      <!-- Controls toolbar -->
+      <div class="data-toolbar">
+        <div class="data-search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="data-search" placeholder="Search activities…" autocomplete="off">
+        </div>
+        <select id="data-category" aria-label="Filter by category">
+          <option value="">All Categories</option>
+          <option value="Work">Work</option>
+          <option value="Health">Health</option>
+          <option value="Learning">Learning</option>
+          <option value="Finance">Finance</option>
+          <option value="Personal">Personal</option>
+        </select>
+        <select id="data-status" aria-label="Filter by status">
+          <option value="">All Statuses</option>
+          <option value="Done">Done</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Pending">Pending</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" id="data-sort" title="Toggle sort direction">
+          Sort: A–Z ↕
+        </button>
+        <div class="view-toggle">
+          <button class="view-btn active" id="view-cards" title="Card view" aria-label="Card view">⊞</button>
+          <button class="view-btn" id="view-table" title="Table view" aria-label="Table view">☰</button>
+        </div>
+      </div>
+
+      <!-- Active filter pills -->
+      <div class="filter-pills" id="filter-pills"></div>
+
+      <!-- Results count -->
+      <p class="data-count" id="data-count"></p>
+
+      <!-- Render target -->
+      <div id="data-render"></div>
+    </div>
+  </main>
+
+  <footer
+    style="text-align:center;padding:24px;color:var(--text-secondary);font-size:.82rem;border-top:1px solid var(--border)">
+    © 2025 Momentum. Build your best self.</footer>
+
+  <!-- Rating Modal -->
+  <div class="modal-overlay" id="rating-modal">
+    <div class="modal">
+      <h3 id="modal-title">How well did you do?</h3>
+      <p id="modal-task-name"></p>
+      <div class="rating-grid" id="rating-grid"></div>
+      <button class="btn btn-primary" id="modal-submit" disabled>Submit Rating</button>
+      <button class="btn btn-secondary" id="modal-cancel" style="margin-left:8px">Cancel</button>
+    </div>
   </div>
-</div>
-</main>
 
-<footer style="text-align:center;padding:24px;color:var(--text-secondary);font-size:.82rem;border-top:1px solid var(--border)">© 2025 Momentum. Build your best self.</footer>
-
-<!-- Rating Modal -->
-<div class="modal-overlay" id="rating-modal">
-  <div class="modal">
-    <h3 id="modal-title">How well did you do?</h3>
-    <p id="modal-task-name"></p>
-    <div class="rating-grid" id="rating-grid"></div>
-    <button class="btn btn-primary" id="modal-submit" disabled>Submit Rating</button>
-    <button class="btn btn-secondary" id="modal-cancel" style="margin-left:8px">Cancel</button>
-  </div>
-</div>
-
-<script src="script.js"></script>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
