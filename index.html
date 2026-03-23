@@ -23,6 +23,7 @@
       <a href="#" data-section="pomodoro">Pomodoro</a>
       <a href="#" data-section="stats">Stats</a>
       <a href="#" data-section="data">Data</a>
+      <a href="#" data-section="live">Live 🟡</a>
     </nav>
     <div class="header-right">
       <div id="mini-timer" class="mono"></div>
@@ -245,6 +246,60 @@
 
       <!-- Render target -->
       <div id="data-render"></div>
+    </div>
+
+    <!-- LIVE DATA -->
+    <div class="section" id="section-live">
+      <div class="live-header">
+        <div>
+          <h2 style="margin-bottom:4px">🌐 Live Data</h2>
+          <p style="color:var(--text-secondary);font-size:.88rem">Fetched live from <a
+              href="https://jsonplaceholder.typicode.com" target="_blank" rel="noopener"
+              class="api-link">JSONPlaceholder API</a></p>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="live-refresh" title="Refresh data">↻ Refresh</button>
+      </div>
+
+      <!-- Resource tabs -->
+      <div class="resource-tabs" role="tablist">
+        <button class="resource-tab active" data-resource="users" role="tab" aria-selected="true">👥 Users</button>
+        <button class="resource-tab" data-resource="posts" role="tab" aria-selected="false">📝 Posts</button>
+        <button class="resource-tab" data-resource="todos" role="tab" aria-selected="false">✅ Todos</button>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="data-toolbar live-toolbar">
+        <div class="data-search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="live-search" placeholder="Search…" autocomplete="off">
+        </div>
+        <select id="live-filter" aria-label="Filter">
+          <option value="">All</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" id="live-sort">Sort: A–Z ↕</button>
+        <div class="view-toggle">
+          <button class="view-btn active" id="live-view-cards" aria-label="Card view">⊞</button>
+          <button class="view-btn" id="live-view-table" aria-label="Table view">☰</button>
+        </div>
+      </div>
+
+      <!-- Active filter pills -->
+      <div class="filter-pills" id="live-pills"></div>
+
+      <!-- Results info -->
+      <p class="data-count" id="live-count"></p>
+
+      <!-- States: loading / error / data -->
+      <div id="live-render">
+        <!-- populated by JS -->
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="live-pagination">
+        <button class="btn btn-secondary btn-sm" id="live-prev" disabled>← Prev</button>
+        <span class="page-info" id="live-page-info"></span>
+        <button class="btn btn-secondary btn-sm" id="live-next">Next →</button>
+      </div>
     </div>
   </main>
 
