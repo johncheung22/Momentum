@@ -578,17 +578,199 @@ function renderChart(canvasId, dataPoints, title) {
 }
 
 // =========================================================
+// DATA EXPLORER
+// =========================================================
+
+// --- State -------------------------------------------------
+const dataState = {
+  query: '',
+  category: '',
+  status: '',
+  sortDir: 'asc',
+  view: 'cards',
+};
+
+// --- Colour maps -------------------------------------------
+const catColorMap = {
+  Work:     { bg: 'rgba(59,130,246,.15)',  text: '#3b82f6' },
+  Health:   { bg: 'rgba(34,197,94,.15)',   text: '#22c55e' },
+  Learning: { bg: 'rgba(168,85,247,.15)', text: '#a855f7' },
+  Finance:  { bg: 'rgba(20,184,166,.15)',  text: '#14b8a6' },
+  Personal: { bg: 'rgba(245,158,11,.15)', text: '#f59e0b' },
+};
+const statusColorMap = {
+  'Done':        { bg: 'rgba(34,197,94,.15)',   text: '#22c55e' },
+  'In Progress': { bg: 'rgba(245,158,11,.15)', text: '#f59e0b' },
+  'Pending':     { bg: 'rgba(239,68,68,.15)',   text: '#ef4444' },
+};
+
+function buildBadge(label, colorObj) {
+  return `<span class="data-badge" style="background:${colorObj.bg};color:${colorObj.text}">${label}</span>`;
+}
+function scoreBar(val) {
+  const color = val >= 80 ? '#22c55e' : val >= 55 ? '#f59e0b' : '#ef4444';
+  return `<div class="score-bar-wrap" title="Score: ${val}">
+    <div class="score-bar" style="width:${val}%;background:${color}"></div>
+    <span class="score-label">${val}</span>
+  </div>`;
+}
+
+// --- Filter & Sort ----------------------------------------
+function getFilteredData() {
+  const q = dataState.query.toLowerCase();
+  let result = MOCK_DATA.filter(item => {
+    const matchQ   = !q || item.name.toLowerCase().includes(q) || item.tags.some(t => t.includes(q));
+    const matchCat = !dataState.category || item.category === dataState.category;
+    const matchSt  = !dataState.status   || item.status   === dataState.status;
+    return matchQ && matchCat && matchSt;
+  });
+  result.sort((a, b) =>
+    dataState.sortDir === 'asc'
+      ? a.name.localeCompare(b.name)
+      : b.name.localeCompare(a.name)
+  );
+  return result;
+}
+
+// --- Filter pills -----------------------------------------
+function renderFilterPills() {
+  const pills = [];
+  if (dataState.query)    pills.push({ label: `"${dataState.query}"`, key: 'query' });
+  if (dataState.category) pills.push({ label: dataState.category, key: 'category' });
+  if (dataState.status)   pills.push({ label: dataState.status, key: 'status' });
+  $('filter-pills').innerHTML = pills.map(p =>
+    `<span class="filter-pill" data-key="${p.key}">${p.label} ×</span>`
+  ).join('');
+  $('filter-pills').querySelectorAll('.filter-pill').forEach(el => {
+    el.addEventListener('click', () => {
+      const k = el.dataset.key;
+      dataState[k] = '';
+      if (k === 'query')    $('data-search').value   = '';
+      if (k === 'category') $('data-category').value = '';
+      if (k === 'status')   $('data-status').value   = '';
+      renderData();
+    });
+  });
+}
+
+// --- Card view --------------------------------------------
+function renderCardsView(data) {
+  if (!data.length) return `<div class="empty-state"><p>😕 No activities match your filters.</p><p style="font-size:.82rem">Try clearing a filter above.</p></div>`;
+  return `<div class="data-cards-grid">${data.map(item => {
+    const cat = catColorMap[item.category] || catColorMap.Personal;
+    const st  = statusColorMap[item.status] || statusColorMap.Pending;
+    return `<div class="data-card card" tabindex="0">
+      <div class="data-card-header">
+        ${buildBadge(item.category, cat)}
+        ${buildBadge(item.status, st)}
+      </div>
+      <h3 class="data-card-title">${esc(item.name)}</h3>
+      <div class="data-card-meta"><span>📅 ${fmtDate(item.date)}</span></div>
+      ${scoreBar(item.value)}
+      <div class="data-card-tags">${item.tags.map(t => `<span class="tag">#${t}</span>`).join('')}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// --- Table view -------------------------------------------
+function renderTableView(data) {
+  if (!data.length) return `<div class="empty-state"><p>😕 No activities match your filters.</p><p style="font-size:.82rem">Try clearing a filter above.</p></div>`;
+  const rows = data.map(item => {
+    const cat = catColorMap[item.category] || catColorMap.Personal;
+    const st  = statusColorMap[item.status] || statusColorMap.Pending;
+    return `<tr>
+      <td>${esc(item.name)}</td>
+      <td>${buildBadge(item.category, cat)}</td>
+      <td>${buildBadge(item.status, st)}</td>
+      <td class="mono">${fmtDate(item.date)}</td>
+      <td>${scoreBar(item.value)}</td>
+      <td class="data-tags-cell">${item.tags.map(t => `<span class="tag">#${t}</span>`).join('')}</td>
+    </tr>`;
+  }).join('');
+  return `<div style="overflow-x:auto"><table class="stats-table data-table">
+    <thead><tr><th>Activity</th><th>Category</th><th>Status</th><th>Date</th><th>Score</th><th>Tags</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+// --- Main render ------------------------------------------
+function renderData() {
+  const data = getFilteredData();
+  const total = MOCK_DATA.length;
+  $('data-count').textContent = data.length === total
+    ? `Showing all ${total} activities`
+    : `Showing ${data.length} of ${total} activities`;
+  renderFilterPills();
+  $('data-render').innerHTML = dataState.view === 'cards'
+    ? renderCardsView(data)
+    : renderTableView(data);
+  $('data-sort').textContent = dataState.sortDir === 'asc' ? 'Sort: A\u2013Z \u2195' : 'Sort: Z\u2013A \u2195';
+}
+
+// --- Wire controls ----------------------------------------
+function initDataExplorer() {
+  $('data-search').addEventListener('input', e => { dataState.query = e.target.value.trim(); renderData(); });
+  $('data-category').addEventListener('change', e => { dataState.category = e.target.value; renderData(); });
+  $('data-status').addEventListener('change', e => { dataState.status = e.target.value; renderData(); });
+  $('data-sort').addEventListener('click', () => { dataState.sortDir = dataState.sortDir === 'asc' ? 'desc' : 'asc'; renderData(); });
+  $('view-cards').addEventListener('click', () => {
+    dataState.view = 'cards';
+    $('view-cards').classList.add('active');
+    $('view-table').classList.remove('active');
+    renderData();
+  });
+  $('view-table').addEventListener('click', () => {
+    dataState.view = 'table';
+    $('view-table').classList.add('active');
+    $('view-cards').classList.remove('active');
+    renderData();
+  });
+  // Hook Data nav link (data section not in original showSection switch)
+  document.querySelectorAll('#main-nav a').forEach(a => {
+    if (a.dataset.section === 'data') {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('#main-nav a').forEach(x => x.classList.toggle('active', x.dataset.section === 'data'));
+        $('section-data').classList.add('active');
+        renderData();
+      });
+    }
+  });
+  renderData();
+}
+
+// =========================================================
+// HAMBURGER MENU
+// =========================================================
+(function initHamburger() {
+  const ham = $('hamburger');
+  const nav = $('main-nav');
+  if (!ham) return;
+  ham.addEventListener('click', () => {
+    const open = nav.classList.toggle('nav-open');
+    ham.classList.toggle('open', open);
+    ham.setAttribute('aria-expanded', String(open));
+  });
+  nav.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      nav.classList.remove('nav-open');
+      ham.classList.remove('open');
+      ham.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
+
+// =========================================================
 // INIT
 // =========================================================
 (function init() {
   applyTheme(settings.theme);
   initCalendar();
   renderHome();
-  // Set default dates
+  initDataExplorer();
   $('task-date').value = todayStr();
   $('qa-date').value = todayStr();
-  // Update mini timer when switching sections
-  const origShow = showSection;
   setInterval(() => {
     if (pomoState.running && !pomoState.paused) updateTimerUI();
   }, 500);
