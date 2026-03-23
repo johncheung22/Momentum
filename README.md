@@ -1,3 +1,7 @@
+Here's the content with all formatting removed:
+
+---
+
 Momentum Dashboard
 
 A personal productivity dashboard built with HTML, CSS, and vanilla JavaScript.
@@ -6,69 +10,66 @@ A personal productivity dashboard built with HTML, CSS, and vanilla JavaScript.
 
 Dashboard Purpose
 
-Momentum helps you track goals, tasks, Pomodoro sessions, and performance stats — all in one place. The Data Explorer section (new in this version) provides a filterable, searchable view of your productivity activity log.
+Momentum helps you track goals, tasks, Pomodoro sessions, and performance stats — all in one place. It includes a Data Explorer for mock productivity logs and a Live Data section for real-time API integration.
 
 ---
 
-Data Structure
+Live Data (API Integration)
 
-Mock data lives in `data.js` as a global array: `MOCK_DATA`.
+The Live Data section connects to the JSONPlaceholder fake online REST API to demonstrate real-time data fetching and state management.
 
-Each record has:
+Features
 
-| Field      | Type     | Description                               |
-| ---------- | -------- | ----------------------------------------- |
-| `id`       | number   | Unique identifier                         |
-| `name`     | string   | Activity title                            |
-| `category` | string   | Work, Health, Learning, Finance, Personal |
-| `status`   | string   | Done, In Progress, Pending                |
-| `date`     | string   | ISO date YYYY-MM-DD                       |
-| `value`    | number   | Completion score 0–100                    |
-| `tags`     | string[] | Keyword tags for search                   |
+Feature: Details
+Multiple Resources: Switch between Users, Posts, and Todos
+UI State Management: Handles Loading (spinner), Error (retry button), and Empty states
+Interactive Controls: Search (by name/title/email), Filter (by User ID or Status), Sort (A-Z/Z-A), and Refresh
+View Toggle: Switch between Card Grid and Table layouts for each resource
+Pagination: Efficiently browse large datasets (6 items per page)
+Persistence: Remembers your last-viewed resource using localStorage
 
-User-created goals, tasks, and Pomodoro logs are stored in localStorage under momentum_* keys.
+API Endpoints Used
+
+GET /users - Detailed user profiles
+GET /posts - Blog post content
+GET /todos - Task completion status
 
 ---
+
+Data Explorer (Mock Data)
+
+The Data Explorer section uses a static dataset in data.js (MOCK_DATA) to demonstrate basic filtering and sorting.
 
 Filters Implemented
 
-All filters in the Data Explorer section update the UI instantly (no page reload):
-
-| Control                  | Behaviour                                               |
-| ------------------------ | ------------------------------------------------------- |
-| Search input             | Fuzzy match on activity name and tags                   |
-| Category dropdown        | Filter by Work / Health / Learning / Finance / Personal |
-| Status dropdown          | Filter by Done / In Progress / Pending                  |
-| Sort toggle (A–Z / Z–A)  | Alphabetically sort the filtered results                |
-| Card / Table view toggle | Switch between a responsive card grid and a data table  |
-| Filter pills             | Active filters shown as removable pill chips            |
+Control: Behaviour
+Search input: Fuzzy match on activity name and tags
+Category dropdown: Filter by Work / Health / Learning / Finance / Personal
+Status dropdown: Filter by Done / In Progress / Pending
+Sort toggle (A–Z / Z–A): Alphabetically sort the filtered results
+Card / Table view toggle: Switch between a responsive card grid and a data table
 
 ---
 
-Responsive Design Choices
+Technical Design & Responsiveness
 
-| Breakpoint | Behaviour |
-| ---------- | --------- |
+Technical Stack
 
-> 768 px (Desktop) | Full horizontal nav, multi-column card grids
-> ≤ 768 px (Tablet/Mobile) | Hamburger menu replaces horizontal nav; nav items stack vertically with a smooth max-height slide animation
-> ≤ 480 px (Small mobile) | Single-column layouts for stat cards and data cards
+HTML5: Semantic structure
+CSS3: Vanilla CSS with custom properties (variables) and Flexbox/Grid
+JavaScript: ES6+, Fetch API, Asynchronous JS, localStorage
 
-CSS techniques used:
+Responsive Design
 
-* CSS Grid (auto-fill columns with minmax) for fluid card grids
-* Flexbox for nav, toolbars, and badges
-* CSS custom properties (variables) for consistent theming
-* Smooth transitions on all interactive elements
-* max-height animation for the mobile nav collapse
+Desktop: Full horizontal nav, multi-column card grids.
+Mobile/Tablet: Hamburger menu with smooth slide animation.
+Micro-interactions: Hover effects, focus states, and loading spinners.
 
 ---
 
-Files
+Project Files
 
-| File         | Role                                                   |
-| ------------ | ------------------------------------------------------ |
-| `index.html` | Structure & markup                                     |
-| `style.css`  | All styles (design system, components, responsive)     |
-| `data.js`    | 30-record mock dataset                                 |
-| `script.js`  | All interactivity, state management, and DOM rendering |
+index.html: Main structure.
+style.css: All dashboard and API styles.
+script.js: State management, Fetch logic, and DOM rendering.
+data.js: Mock productivity dataset.
