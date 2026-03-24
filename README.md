@@ -1,5 +1,3 @@
-Here's the content with all formatting removed:
-
 ---
 
 Momentum Dashboard
