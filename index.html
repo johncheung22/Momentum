@@ -24,6 +24,7 @@
       <a href="#" data-section="stats">Stats</a>
       <a href="#" data-section="data">Data</a>
       <a href="#" data-section="live">Live 🟡</a>
+      <a href="#" data-section="settings">Settings</a>
     </nav>
     <div class="header-right">
       <div id="mini-timer" class="mono"></div>
@@ -299,6 +300,51 @@
         <button class="btn btn-secondary btn-sm" id="live-prev" disabled>← Prev</button>
         <span class="page-info" id="live-page-info"></span>
         <button class="btn btn-secondary btn-sm" id="live-next">Next →</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS / PROFILE -->
+    <div class="section" id="section-settings">
+      <div class="section-title">
+        <h2 style="margin-bottom:8px">⚙️ User Settings</h2>
+        <p style="color:var(--text-secondary);font-size:.9rem">Personalize your profile and dashboard preferences. Data is stored locally.</p>
+      </div>
+
+      <div class="card settings-card" style="max-width: 600px; margin: 0 auto;">
+        <form id="settings-form" novalidate>
+          <div class="form-group">
+            <label for="settings-name">Full Name *</label>
+            <input type="text" id="settings-name" placeholder="Enter your name" required>
+            <div class="error-msg" id="err-settings-name" style="color: var(--danger); font-size: 0.8rem; display: none; margin-top: 4px;">Name is required (at least 2 characters).</div>
+          </div>
+
+          <div class="form-group">
+            <label for="settings-email">Email Address *</label>
+            <input type="email" id="settings-email" placeholder="example@email.com" required>
+            <div class="error-msg" id="err-settings-email" style="color: var(--danger); font-size: 0.8rem; display: none; margin-top: 4px;">Please enter a valid email address.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="settings-focus">Primary Focus</label>
+            <select id="settings-focus">
+              <option value="Work">Work</option>
+              <option value="Health">Health</option>
+              <option value="Learning">Learning</option>
+              <option value="Personal" selected>Personal</option>
+              <option value="Finance">Finance</option>
+            </select>
+          </div>
+
+          <div class="form-group checkbox-group" style="display: flex; align-items: center; gap: 12px; margin-top: 20px;">
+             <input type="checkbox" id="settings-compact" style="width: 18px; height: 18px;">
+             <span style="font-size:0.9rem">Enable Compact View (reduced spacing throughout the dashboard)</span>
+          </div>
+
+          <div class="settings-actions" style="margin-top:32px; display:flex; gap:12px;">
+            <button type="submit" class="btn btn-primary" id="settings-save">Save Profile</button>
+            <button type="button" class="btn btn-secondary" id="settings-reset">Reset All Data</button>
+          </div>
+        </form>
       </div>
     </div>
   </main>
