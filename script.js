@@ -1012,6 +1012,94 @@ function initLiveExplorer() {
 }
 
 // =========================================================
+// SETTINGS & PROFILE
+// =========================================================
+
+function initSettings() {
+  const form = $('settings-form');
+  const nameInp = $('settings-name');
+  const emailInp = $('settings-email');
+  const focusInp = $('settings-focus');
+  const compactInp = $('settings-compact');
+
+  // Load current values
+  nameInp.value = settings.userName || '';
+  emailInp.value = settings.userEmail || '';
+  focusInp.value = settings.primaryFocus || 'Personal';
+  compactInp.checked = settings.compactMode || false;
+
+  if (settings.compactMode) document.body.classList.add('compact-view');
+
+  // Real-time validation
+  nameInp.addEventListener('input', () => validateSettingsField(nameInp, 'err-settings-name', val => val.length >= 2));
+  emailInp.addEventListener('input', () => validateSettingsField(emailInp, 'err-settings-email', val => /^\S+@\S+\.\S+$/.test(val)));
+
+  function validateSettingsField(inp, errId, checkFn) {
+    const isValid = checkFn(inp.value.trim());
+    $(errId).style.display = isValid ? 'none' : 'block';
+    inp.classList.toggle('error', !isValid);
+    return isValid;
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const isNameValid = validateSettingsField(nameInp, 'err-settings-name', val => val.length >= 2);
+    const isEmailValid = validateSettingsField(emailInp, 'err-settings-email', val => /^\S+@\S+\.\S+$/.test(val));
+
+    if (!isNameValid || isEmailValid === false) {
+      showToast('Please fix the errors in the form.', 'danger');
+      return;
+    }
+
+    // Update settings object
+    settings.userName = nameInp.value.trim();
+    settings.userEmail = emailInp.value.trim();
+    settings.primaryFocus = focusInp.value;
+    settings.compactMode = compactInp.checked;
+
+    // Apply immediate changes
+    if (settings.compactMode) document.body.classList.add('compact-view');
+    else document.body.classList.remove('compact-view');
+    renderHome(); // Update greeting
+
+    saveAll(); // Persist to localStorage
+    showToast('Profile updated successfully! ✨', 'success');
+  });
+
+  $('settings-reset').addEventListener('click', () => {
+    if (confirm('Are you sure you want to reset all data? This will clear all goals, tasks, and settings.')) {
+      localStorage.clear();
+      location.reload();
+    }
+  });
+
+  // Generic nav switcher for any [data-section] links
+  document.querySelectorAll('#main-nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = a.dataset.section;
+      if (!target) return;
+      e.preventDefault();
+
+      // Update active nav link
+      document.querySelectorAll('#main-nav a').forEach(x => x.classList.toggle('active', x === a));
+
+      // Show correct section
+      document.querySelectorAll('.section').forEach(s => {
+        s.classList.toggle('active', s.id === `section-${target}`);
+      });
+
+      // Resource loading if necessary
+      if (target === 'live' && !apiState.rawData.length) fetchApiData();
+      else if (target === 'live') renderLiveSection();
+      else if (target === 'home') renderHome();
+      else if (target === 'goals') renderGoals();
+      else if (target === 'tasks') renderTasks();
+      else if (target === 'stats') renderStats();
+    });
+  });
+}
+
+// =========================================================
 // INIT
 // =========================================================
 (function init() {
@@ -1020,9 +1108,11 @@ function initLiveExplorer() {
   renderHome();
   initDataExplorer();
   initLiveExplorer();
+  initSettings();
   $('task-date').value = todayStr();
   $('qa-date').value = todayStr();
   setInterval(() => {
     if (pomoState.running && !pomoState.paused) updateTimerUI();
   }, 500);
 })();
+
